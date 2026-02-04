@@ -1,0 +1,8 @@
+services:
+  app:
+    image: ghcr.io/damnordicus/printer-log-app:latest
+    ports:
+      - "3030:3000"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
