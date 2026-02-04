@@ -1,0 +1,21 @@
+[
+  {
+    "printerId": "5141e389-a073-4186-b774-380216e31fcc",
+    "description": "Replaced nozzle",
+    "performedBy": "John",
+    "performedAt": "2026-02-04",
+    "category": "repair",
+    "id": "44171c7d-fa9e-4e78-93f0-2573ed9d22e8",
+    "createdAt": "2026-02-04T18:29:47.420Z"
+  },
+  {
+    "printerId": "5141e389-a073-4186-b774-380216e31fcc",
+    "description": "removed extruder assembly #1",
+    "performedBy": "Nord",
+    "performedAt": "2026-02-04",
+    "category": "other",
+    "notes": "Diagnostics",
+    "id": "2473f80c-0eac-46bd-81b9-2a3b71146f1f",
+    "createdAt": "2026-02-04T18:32:16.287Z"
+  }
+]

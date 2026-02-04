@@ -3,13 +3,26 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Prusa brand colors */
+  --color-prusa-50: #fff4f0;
+  --color-prusa-100: #ffe4db;
+  --color-prusa-200: #ffc9b7;
+  --color-prusa-300: #ffa88e;
+  --color-prusa-400: #fb8a5f;
+  --color-prusa-500: #fa6831;
+  --color-prusa-600: #e55a26;
+  --color-prusa-700: #c44a1d;
+  --color-prusa-800: #9e3b17;
+  --color-prusa-900: #7a2e12;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-gray-50 text-gray-900;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+/* Focus styles with Prusa orange */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-prusa-500;
 }
