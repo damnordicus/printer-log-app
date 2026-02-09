@@ -5,3 +5,6 @@
 # React Router
 /.react-router/
 /build/
+
+# Data persistence (managed at runtime, not by git)
+/data/
