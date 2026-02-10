@@ -3,12 +3,15 @@ import { Form, Link, redirect } from "react-router";
 import type { Route } from "./+types/$printerId";
 import { Header } from "~/components/layout/Header";
 import { MaintenanceList } from "~/components/maintenance/MaintenanceList";
+import { ErrorList } from "~/components/errors/ErrorList";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
 import {
   getPrinterById,
   getMaintenanceForPrinter,
+  getErrorsForPrinter,
   updatePrinter,
+  resolveErrorLog,
 } from "~/lib/data.server";
 
 export function meta({ data }: Route.MetaArgs) {
@@ -24,13 +27,27 @@ export async function loader({ params }: Route.LoaderArgs) {
     throw new Response("Printer not found", { status: 404 });
   }
 
-  const maintenanceActions = await getMaintenanceForPrinter(params.printerId);
+  const [maintenanceActions, errorLogs] = await Promise.all([
+    getMaintenanceForPrinter(params.printerId),
+    getErrorsForPrinter(params.printerId),
+  ]);
 
-  return { printer, maintenanceActions };
+  return { printer, maintenanceActions, errorLogs };
 }
 
 export async function action({ params, request }: Route.ActionArgs) {
   const formData = await request.formData();
+  const intent = formData.get("intent");
+
+  if (intent === "resolve-error") {
+    const errorId = formData.get("errorId");
+    if (errorId && typeof errorId === "string") {
+      await resolveErrorLog(params.printerId, errorId);
+    }
+    return redirect(`/printers/${params.printerId}`);
+  }
+
+  // Default: edit printer
   const name = formData.get("name") as string;
   const model = formData.get("model") as string;
   const serialNumber = (formData.get("serialNumber") as string) || undefined;
@@ -56,8 +73,15 @@ export default function PrinterDetail({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
-  const { printer, maintenanceActions } = loaderData;
+  const { printer, maintenanceActions, errorLogs } = loaderData;
   const [editing, setEditing] = useState(false);
+
+  const statusConfig = {
+    online: { label: "Online", dot: "bg-green-500", text: "text-green-700", bg: "bg-green-50" },
+    error: { label: "Error", dot: "bg-red-500", text: "text-red-700", bg: "bg-red-50" },
+    offline: { label: "Offline", dot: "bg-gray-400", text: "text-gray-600", bg: "bg-gray-50" },
+  };
+  const status = statusConfig[printer.status] || statusConfig.online;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -147,18 +171,27 @@ export default function PrinterDetail({
                     </svg>
                     Back to Dashboard
                   </Link>
-                  <h1 className="text-2xl font-bold text-gray-900">
-                    {printer.name}
-                  </h1>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      {printer.name}
+                    </h1>
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm font-medium ${status.bg} ${status.text}`}>
+                      <span className={`w-2 h-2 rounded-full ${status.dot}`} />
+                      {status.label}
+                    </span>
+                  </div>
                   <p className="text-gray-600 text-lg">{printer.model}</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     variant="secondary"
                     onClick={() => setEditing(true)}
                   >
                     Edit
                   </Button>
+                  <Link to={`/printers/${printer.id}/error/new`}>
+                    <Button variant="danger">Log Error</Button>
+                  </Link>
                   <Link to={`/printers/${printer.id}/maintenance/new`}>
                     <Button>Log Maintenance</Button>
                   </Link>
@@ -200,6 +233,15 @@ export default function PrinterDetail({
               )}
             </>
           )}
+        </div>
+
+        {/* Error log */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Error Log</h2>
+        </div>
+
+        <div className="mb-8">
+          <ErrorList errors={errorLogs} />
         </div>
 
         {/* Maintenance history */}
