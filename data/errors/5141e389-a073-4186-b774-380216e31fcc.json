@@ -1,0 +1,13 @@
+[
+  {
+    "printerId": "5141e389-a073-4186-b774-380216e31fcc",
+    "description": "Extruder motor not spinning",
+    "reportedBy": "Nord",
+    "reportedAt": "2026-02-10",
+    "severity": "critical",
+    "id": "cfe63592-c5e2-4655-9342-6cc67e98d648",
+    "resolved": true,
+    "createdAt": "2026-02-10T18:44:37.940Z",
+    "resolvedAt": "2026-02-10T18:45:06.192Z"
+  }
+]

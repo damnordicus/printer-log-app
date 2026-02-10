@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Prusa MK4",
+    "model": "Original Prusa MK4",
+    "serialNumber": "SN12345",
+    "id": "5141e389-a073-4186-b774-380216e31fcc",
+    "createdAt": "2026-02-04T18:29:17.632Z",
+    "updatedAt": "2026-02-10T18:45:06.196Z",
+    "status": "online"
+  },
+  {
+    "name": "XL right",
+    "model": "XL",
+    "notes": "asdf",
+    "id": "8aa5047d-0e96-45ae-b1b8-73670af5063f",
+    "createdAt": "2026-02-04T18:30:30.491Z",
+    "updatedAt": "2026-02-04T18:30:30.491Z",
+    "status": "online"
+  }
+]

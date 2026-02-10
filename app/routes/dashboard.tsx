@@ -4,7 +4,7 @@ import { PrinterCard } from "~/components/printers/PrinterCard";
 import { RecentActivityFeed } from "~/components/maintenance/RecentActivityFeed";
 import {
   getPrintersWithLastMaintenance,
-  getRecentMaintenanceActions,
+  getRecentActivity,
 } from "~/lib/data.server";
 
 export function meta({}: Route.MetaArgs) {
@@ -17,7 +17,7 @@ export function meta({}: Route.MetaArgs) {
 export async function loader({}: Route.LoaderArgs) {
   const [printers, recentActivity] = await Promise.all([
     getPrintersWithLastMaintenance(),
-    getRecentMaintenanceActions(10),
+    getRecentActivity(10),
   ]);
 
   return { printers, recentActivity };

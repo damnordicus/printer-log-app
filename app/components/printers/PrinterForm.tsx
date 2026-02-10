@@ -1,12 +1,23 @@
 import { Form, Link } from "react-router";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
+import { Select } from "~/components/ui/Select";
+import type { Printer } from "~/types";
 
 interface PrinterFormProps {
+  printer?: Printer;
   error?: string;
 }
 
-export function PrinterForm({ error }: PrinterFormProps) {
+const statusOptions = [
+  { value: "online", label: "Online" },
+  { value: "error", label: "Error" },
+  { value: "offline", label: "Offline" },
+];
+
+export function PrinterForm({ printer, error }: PrinterFormProps) {
+  const isEdit = !!printer;
+
   return (
     <Form method="post" className="space-y-6 bg-white p-6 rounded-xl border border-gray-200">
       {error && (
@@ -19,6 +30,7 @@ export function PrinterForm({ error }: PrinterFormProps) {
         label="Printer Name"
         name="name"
         placeholder="e.g., Prusa MK4 #1"
+        defaultValue={printer?.name}
         required
       />
 
@@ -26,6 +38,7 @@ export function PrinterForm({ error }: PrinterFormProps) {
         label="Model"
         name="model"
         placeholder="e.g., Prusa MK4, Prusa Mini+"
+        defaultValue={printer?.model}
         required
       />
 
@@ -33,13 +46,24 @@ export function PrinterForm({ error }: PrinterFormProps) {
         label="Serial Number"
         name="serialNumber"
         placeholder="Optional"
+        defaultValue={printer?.serialNumber}
       />
 
       <Input
         label="Purchase Date"
         name="purchaseDate"
         type="date"
+        defaultValue={printer?.purchaseDate}
       />
+
+      {isEdit && (
+        <Select
+          label="Status"
+          name="status"
+          options={statusOptions}
+          defaultValue={printer.status}
+        />
+      )}
 
       <div className="space-y-1">
         <label
@@ -52,6 +76,7 @@ export function PrinterForm({ error }: PrinterFormProps) {
           id="notes"
           name="notes"
           rows={3}
+          defaultValue={printer?.notes}
           className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-prusa-500 focus:border-prusa-500 transition-colors"
           placeholder="Any additional notes about this printer..."
         />
@@ -59,9 +84,9 @@ export function PrinterForm({ error }: PrinterFormProps) {
 
       <div className="flex gap-3 pt-4">
         <Button type="submit" className="flex-1">
-          Add Printer
+          {isEdit ? "Save Changes" : "Add Printer"}
         </Button>
-        <Link to="/">
+        <Link to={isEdit ? `/printers/${printer.id}` : "/"}>
           <Button type="button" variant="secondary">
             Cancel
           </Button>

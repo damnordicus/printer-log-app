@@ -3,23 +3,20 @@ import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
 import { Select } from "~/components/ui/Select";
 
-interface MaintenanceFormProps {
+interface ErrorFormProps {
   printerId: string;
   error?: string;
 }
 
-const categoryOptions = [
-  { value: "", label: "Select category (optional)" },
-  { value: "cleaning", label: "Cleaning" },
-  { value: "lubrication", label: "Lubrication" },
-  { value: "calibration", label: "Calibration" },
-  { value: "repair", label: "Repair" },
-  { value: "upgrade", label: "Upgrade" },
-  { value: "inspection", label: "Inspection" },
-  { value: "other", label: "Other" },
+const severityOptions = [
+  { value: "", label: "Select severity (optional)" },
+  { value: "low", label: "Low" },
+  { value: "medium", label: "Medium" },
+  { value: "high", label: "High" },
+  { value: "critical", label: "Critical" },
 ];
 
-export function MaintenanceForm({ printerId, error }: MaintenanceFormProps) {
+export function ErrorForm({ printerId, error }: ErrorFormProps) {
   const today = new Date().toISOString().split("T")[0];
 
   return (
@@ -31,31 +28,31 @@ export function MaintenanceForm({ printerId, error }: MaintenanceFormProps) {
       )}
 
       <Input
-        label="What was done?"
+        label="Error Description"
         name="description"
-        placeholder="e.g., Replaced nozzle, cleaned heatbed, tightened belts"
+        placeholder="e.g., Extruder clogged, bed leveling failed, thermal runaway"
         required
       />
 
       <Input
-        label="Performed by"
-        name="performedBy"
+        label="Reported by"
+        name="reportedBy"
         placeholder="Your name"
         required
       />
 
       <Input
         label="Date"
-        name="performedAt"
+        name="reportedAt"
         type="date"
         defaultValue={today}
         required
       />
 
       <Select
-        label="Category"
-        name="category"
-        options={categoryOptions}
+        label="Severity"
+        name="severity"
+        options={severityOptions}
       />
 
       <div className="space-y-1">
@@ -70,14 +67,13 @@ export function MaintenanceForm({ printerId, error }: MaintenanceFormProps) {
           name="notes"
           rows={3}
           className="w-full border border-gray-300 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-prusa-500 focus:border-prusa-500 transition-colors"
-          placeholder="Any additional details..."
+          placeholder="Any additional details about the error..."
         />
       </div>
 
       <div className="flex gap-3 pt-4">
-        
-        <Button type="submit" className="flex-1">
-          Log Maintenance
+        <Button type="submit" variant="danger" className="flex-1">
+          Log Error
         </Button>
         <Link to={`/printers/${printerId}`}>
           <Button type="button" variant="secondary">

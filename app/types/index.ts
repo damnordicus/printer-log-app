@@ -1,3 +1,6 @@
+// Printer status
+export type PrinterStatus = "online" | "error" | "offline";
+
 // Printer model
 export interface Printer {
   id: string;
@@ -6,6 +9,7 @@ export interface Printer {
   serialNumber?: string;
   purchaseDate?: string;
   notes?: string;
+  status: PrinterStatus;
   createdAt: string;
   updatedAt: string;
 }
@@ -32,13 +36,33 @@ export interface MaintenanceAction {
   createdAt: string;
 }
 
+// Error severity
+export type ErrorSeverity = "low" | "medium" | "high" | "critical";
+
+// Error log model
+export interface ErrorLog {
+  id: string;
+  printerId: string;
+  description: string;
+  reportedBy: string;
+  reportedAt: string;
+  severity?: ErrorSeverity;
+  resolved: boolean;
+  resolvedAt?: string;
+  notes?: string;
+  createdAt: string;
+}
+
 // Dashboard types
 export interface RecentActivity {
-  action: MaintenanceAction;
+  type: "maintenance" | "error";
   printer: Printer;
+  action?: MaintenanceAction;
+  errorLog?: ErrorLog;
 }
 
 export interface PrinterWithLastMaintenance extends Printer {
   lastMaintenance?: MaintenanceAction;
   totalMaintenanceCount: number;
+  activeErrorCount: number;
 }
